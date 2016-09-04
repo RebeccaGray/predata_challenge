@@ -21,6 +21,42 @@ const pHTTP = (url) =>
     }).on('error', reject);
   });
 
+  app.get('/signals/peaks/:id', (req,res) => {
+      //get signals by Id
+      var method = req.query.method
+      pHTTP('http://predata-challenge.herokuapp.com/signals/' + req.params.id)
+        .then((data) => {
+          var data = JSON.parse(data)
+          var peaks = [];
+          if(method === 'highs'){
+            for(let i = 0;i< data.length-1;i++){
+               if(i === 0 && data[i].value > data[i+1].value) {
+                peaks.push(data[i].date)
+               }
+              else if(data[i].value > data[i+1].value && data[i].value > data[i-1].value){
+                 peaks.push(data[i].date)
+               }
+             }
+            res.status(200).send(JSON.stringify(peaks))
+          } else if(method === 'breakout'){
+            var boundary = req.query.boundary
+            //var window = req.query.window
+            //not sure how window comes into play here, since
+            //a value > value + boundary makes sense but
+            //.. is there only one allowed per window subset?
+            for(var i = 0;i< data.length-1;i++){
+               if(i === 0 && data[i].value > data[i+1].value + boundary) {
+                peaks.push(data[i].date)
+               }
+              else if(data[i].value > data[i+1].value + boundary
+                       && data[i].value > data[i-1].value + boundary){
+                 peaks.push(data[i].date)
+               }
+             }
+            res.status(200).send(JSON.stringify(peaks))
+          }
+      })
+});
 
 app.get('/signals/zscore/:id', (req,res) => {
     //get signals by Id
@@ -33,7 +69,7 @@ app.get('/signals/zscore/:id', (req,res) => {
         var i = 0
         data.forEach((obj) =>{
           i++
-          console.log(i)
+          //console.log(i)
           //get time of this object for comparisson
           var thisTime = new Date(obj.date)
           thisTime = thisTime.getTime() / 100000;
