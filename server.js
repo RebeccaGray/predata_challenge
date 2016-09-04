@@ -21,6 +21,16 @@ const pHTTP = (url) =>
     }).on('error', reject);
   });
 
+  // app.get('/signals/cross/:signals_id/:pattern_id', (req,res) => {
+  //     //get signals by Id
+  //     var method = req.query.method
+  //     pHTTP('http://predata-challenge.herokuapp.com/signals/' + req.params.signals_id)
+  //       .then((data) => {
+  //         var data = JSON.parse(data)
+  //         //get peaks for each set, align the sets by peaks and return diff?
+  //         //made dotProduct function but not sure how to use it yet
+  //         //use FFT algorithm to make faster version?
+  //
   app.get('/signals/peaks/:id', (req,res) => {
       //get signals by Id
       var method = req.query.method
