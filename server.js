@@ -5,8 +5,9 @@ const PORT = process.env.PORT || 8000;
 const bodyParser = require('body-parser');
 
 const app = express();
-app.use(bodyParser.json())
-const mh = require('./mathHelpers')
+app.use(bodyParser.json());
+const mh = require('./mathHelpers');
+const h = require('./helpers');
 
 app.listen(PORT, () => {
   console.log('Listening on port ' + PORT);
@@ -21,16 +22,25 @@ const pHTTP = (url) =>
     }).on('error', reject);
   });
 
-  // app.get('/signals/cross/:signals_id/:pattern_id', (req,res) => {
-  //     //get signals by Id
-  //     var method = req.query.method
-  //     pHTTP('http://predata-challenge.herokuapp.com/signals/' + req.params.signals_id)
-  //       .then((data) => {
-  //         var data = JSON.parse(data)
-  //         //get peaks for each set, align the sets by peaks and return diff?
-  //         //made dotProduct function but not sure how to use it yet
-  //         //use FFT algorithm to make faster version?
-  //
+  app.get('/signals/cross/:signals_id/:pattern_id', (req,res) => {
+    //get signals by Id
+    var promises = [];
+    promises.push(pHTTP('http://predata-challenge.herokuapp.com/signals/' + req.params.signals_id))
+    promises.push(pHTTP('http://predata-challenge.herokuapp.com/patterns/' + req.params.pattern_id))
+    Promise.all(promises)
+      .then((data) => {
+          const signals = JSON.parse(data[0])
+          const x = h.obj_values(signals, 'value')
+          const y = JSON.parse(data[1])
+          //use FFT algorithm to make faster
+          //Corr(x,y) => FFT(x)FFT(y)*
+          //This doesn't work yet.
+          const peak_value = mh.xcorr(x, y)
+          const peak_date = h.getDateFromValue(signals, peak_value, 'value', 'date')
+          peak_date ? res.status(200).send(JSON.stringify(peak_date)) : res.status(300).send('correlation not found')
+      })
+  });
+
   app.get('/signals/peaks/:id', (req,res) => {
       //get signals by Id
       var method = req.query.method
