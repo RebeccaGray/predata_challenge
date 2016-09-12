@@ -39,6 +39,9 @@ const pHTTP = (url) =>
           const peak_date = h.getDateFromValue(signals, peak_value, 'value', 'date')
           peak_date ? res.status(200).send(JSON.stringify(peak_date)) : res.status(300).send('correlation not found')
       })
+      .catch((err) => {
+        console.error(err)
+      })
   });
 
   app.get('/signals/peaks/:id', (req,res) => {
@@ -75,6 +78,9 @@ const pHTTP = (url) =>
              }
             res.status(200).send(JSON.stringify(peaks))
           }
+      })
+      .catch((err) => {
+        console.error(err)
       })
 });
 
@@ -131,7 +137,7 @@ app.get('/signals/combine', (req,res) => {
     Promise.all(promises)
       .then((data) => {
         //for each id data set
-        var i = 0, weight, join = {};
+        var i = 0, weight, join = {},result = [];
         data.forEach((set) => {
           set = JSON.parse(set)
           weight = params[i][1]
@@ -140,11 +146,9 @@ app.get('/signals/combine', (req,res) => {
             if(!join[obj.date]) {
               join[obj.date] = 0;
             }
-            join[obj.date] += obj.value * weight
+            result.push({date:obj.date,value:obj.value * weight})
           })
         })
-        var result = []
-        result.push(join)
         res.status(200).send(JSON.stringify(result))
       })
       .catch((err) => {
