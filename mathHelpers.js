@@ -1,9 +1,21 @@
-const fftInPlace = require('fft-js').fft;
+const fft = require('fft-js').fft;
 
 const _fft = (signal) => {
-   return fftInPlace(signal)
+  if(_power_of_2(signal.length) === false) {
+    let add = _nextPow2(signal.length) - signal.length
+    for(let i=0;i< add ;i++){
+      signal.push(0);
+    }
+  }
+   return fft(signal)
 };
-
+const _power_of_2 = (n) => {
+  if (typeof n !== 'number') return 'Not a number';
+  return n && (n & (n - 1)) === 0;
+};
+const _nextPow2 = ( x )=>{
+  return Math.pow(2, Math.ceil(Math.log(x)/Math.log(2)));
+}
 // const _complexConj = (x)=>{
 //   console.log('compconj',x)
 //
