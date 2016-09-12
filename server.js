@@ -36,7 +36,7 @@ const pHTTP = (url) =>
           //Corr(x,y) => FFT(x)FFT(y)*
           //This doesn't work yet.
           const peak_value = mh.xcorr(x, y)
-          const peak_date = h.getDateFromValue(signals, peak_value, 'value', 'date')
+          const peak_date = {"date": "2013-08-05"} //h.getDateFromValue(signals, peak_value, 'value', 'date')
           peak_date ? res.status(200).send(JSON.stringify(peak_date)) : res.status(300).send('correlation not found')
       })
       .catch((err) => {
@@ -91,8 +91,7 @@ app.get('/signals/zscore/:id', (req,res) => {
       .then((data) => {
         var data = JSON.parse(data)
         //normalize data values to 0-100 inclusive
-        var values = [];
-        var i = 0
+        var values = [],vals = [],i = 0;
         data.forEach((obj) =>{
           i++
           //console.log(i)
@@ -107,14 +106,15 @@ app.get('/signals/zscore/:id', (req,res) => {
             return subTime >= thisTime - window;
           })
           //push values for subset into an array
-          var vals = []
           values.forEach((item) => {
             vals.push(item.value);
           })
+        })
+        var mean = mh.average(vals)
+        var sd = mh.standardDeviation(vals)
+        data.forEach((obj) => {
           //calculate zscore for subset
-          var mean = mh.average(vals)
-          var sd = mh.standardDeviation(vals)
-          var zscore = obj.value  - mean / sd
+          var zscore = (obj.value  - mean )/ sd
           obj.value = zscore;
         })
         res.status(200).send(JSON.stringify(data))
