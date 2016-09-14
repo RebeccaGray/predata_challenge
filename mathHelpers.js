@@ -38,23 +38,23 @@ const xcorr = (x,y) => {
 };
 
 const standardDeviation = (values) => {
-    var avg = average(values);
-    var squareDiffs = values.map((value) => {
-      var diff = value - avg;
-      var sqrDiff = diff * diff;
+    let avg = average(values);
+    let squareDiffs = values.map((value) => {
+      let diff = value - avg;
+      let sqrDiff = diff * diff;
       return sqrDiff;
     });
-    var avgSquareDiff = average(squareDiffs);
-    var stdDev = Math.sqrt(avgSquareDiff);
+    let avgSquareDiff = average(squareDiffs);
+    let stdDev = Math.sqrt(avgSquareDiff);
     return stdDev;
   }
 
 const average = (data) => {
   //input array data
-    var sum = data.reduce((sum, value) => {
+    let sum = data.reduce((sum, value) => {
       return sum + value;
     }, 0);
-    var avg = sum / data.length;
+    let avg = sum / data.length;
     return avg;
 }
 
