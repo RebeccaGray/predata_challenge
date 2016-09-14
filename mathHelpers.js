@@ -1,4 +1,3 @@
-//const fft = require('fft-js').fft;
 const numbers = require('numbers');
 
 const _fft = (signal) => {
@@ -8,9 +7,7 @@ const _fft = (signal) => {
       signal.push(0);
     }
   }
-  let a  = numbers.dsp.fft(signal) 
-  console.log('fft',a)
-   return numbers.dsp.fft(signal) //fft(signal)
+   return numbers.dsp.fft(signal)
 };
 const _power_of_2 = (n) => {
   if (typeof n !== 'number') return 'Not a number';
