@@ -36,7 +36,7 @@ const pHTTP = (url) =>
           //Corr(x,y) => FFT(x)FFT(y)*
           //This doesn't work yet.
           const peak_value = mh.xcorr(x, y)
-          const peak_date = {"date": "2013-08-05"} //h.getDateFromValue(signals, peak_value, 'value', 'date')
+          const peak_date = h.getDateFromValue(signals, peak_value, 'value', 'date')
           peak_date ? res.status(200).send(JSON.stringify(peak_date)) : res.status(300).send('correlation not found')
       })
       .catch((err) => {
@@ -49,7 +49,7 @@ const pHTTP = (url) =>
       let method = req.query.method
       pHTTP('http://predata-challenge.herokuapp.com/signals/' + req.params.id)
         .then((data) => {
-          let data = JSON.parse(data)
+          data = JSON.parse(data)
           let peaks = [];
           if(method === 'highs'){
             for(let i = 0;i< data.length-1;i++){
@@ -89,7 +89,7 @@ app.get('/signals/zscore/:id', (req,res) => {
     let window = req.query.window
     pHTTP('http://predata-challenge.herokuapp.com/signals/' + req.params.id)
       .then((data) => {
-        let data = JSON.parse(data)
+        data = JSON.parse(data)
         //normalize data values to 0-100 inclusive
         let values = [],vals = [],i = 0;
         data.forEach((obj) =>{
@@ -139,7 +139,7 @@ app.get('/signals/combine', (req,res) => {
         //for each id data set
         let i = 0, weight, join = {},result = [];
         data.forEach((set) => {
-          let set = JSON.parse(set)
+          set = JSON.parse(set)
           let weight = params[i][1]
           //for each date,value obj
           set.forEach((obj) => {
@@ -161,7 +161,7 @@ app.get('/signals/norms/:id', (req,res) => {
     //get signals by Id
     pHTTP('http://predata-challenge.herokuapp.com/signals/' + req.params.id)
       .then((data) => {
-        let data = JSON.parse(data)
+        data = JSON.parse(data)
         //normalize data values to 0-100 inclusive
         let numbers = [];
         data.forEach((obj) =>{

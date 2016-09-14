@@ -1,4 +1,5 @@
-const fft = require('fft-js').fft;
+//const fft = require('fft-js').fft;
+const numbers = require('numbers');
 
 const _fft = (signal) => {
   if(_power_of_2(signal.length) === false) {
@@ -7,7 +8,9 @@ const _fft = (signal) => {
       signal.push(0);
     }
   }
-   return fft(signal)
+  let a  = numbers.dsp.fft(signal) 
+  console.log('fft',a)
+   return numbers.dsp.fft(signal) //fft(signal)
 };
 const _power_of_2 = (n) => {
   if (typeof n !== 'number') return 'Not a number';
@@ -38,23 +41,24 @@ const xcorr = (x,y) => {
 };
 
 const standardDeviation = (values) => {
-    let avg = average(values);
-    let squareDiffs = values.map((value) => {
-      let diff = value - avg;
-      let sqrDiff = diff * diff;
-      return sqrDiff;
-    });
-    let avgSquareDiff = average(squareDiffs);
-    let stdDev = Math.sqrt(avgSquareDiff);
-    return stdDev;
+    return numbers.statistic.standardDev(values)
+    // var avg = average(values);
+    // var squareDiffs = values.map((value) => {
+    //   var diff = value - avg;
+    //   var sqrDiff = diff * diff;
+    //   return sqrDiff;
+    // });
+    // var avgSquareDiff = average(squareDiffs);
+    // var stdDev = Math.sqrt(avgSquareDiff);
+    // return stdDev;
   }
 
 const average = (data) => {
   //input array data
-    let sum = data.reduce((sum, value) => {
+    var sum = data.reduce((sum, value) => {
       return sum + value;
     }, 0);
-    let avg = sum / data.length;
+    var avg = sum / data.length;
     return avg;
 }
 
