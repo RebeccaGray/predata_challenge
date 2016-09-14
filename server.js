@@ -16,7 +16,7 @@ app.listen(PORT, () => {
 const pHTTP = (url) =>
   new Promise((resolve, reject) => {
     http.get(url, (val) => {
-      var data = "";
+      let data = "";
       val.on('data', (chunk) => data += chunk);
       val.on('end', () => resolve(data));
     }).on('error', reject);
