@@ -91,10 +91,8 @@ app.get('/signals/zscore/:id', (req,res) => {
       .then((data) => {
         data = JSON.parse(data)
         //normalize data values to 0-100 inclusive
-        let values = [],vals = [],i = 0;
+        let values = [],vals = [];
         data.forEach((obj) =>{
-          i++
-          //console.log(i)
           //get time of this object for comparisson
           let thisTime = new Date(obj.date)
           thisTime = thisTime.getTime() / 100000;
@@ -144,11 +142,16 @@ app.get('/signals/combine', (req,res) => {
           //for each date,value obj
           set.forEach((obj) => {
             if(!join[obj.date]) {
-              join[obj.date] = 0;
+              join[obj.date] = weight * obj.value;
+            }else {
+              let val = join[obj.date] + (obj.value * weight)
+              result.push({date:obj.date,value:val})
             }
-            result.push({date:obj.date,value:obj.value * weight})
           })
         })
+        result.sort((a,b) => {
+          return new Date(a.date).getTime() - new Date(b.date).getTime()
+        });
         res.status(200).send(JSON.stringify(result))
       })
       .catch((err) => {
@@ -157,7 +160,7 @@ app.get('/signals/combine', (req,res) => {
 })
 
 
-app.get('/signals/norms/:id', (req,res) => {
+app.get('/signals/norm/:id', (req,res) => {
     //get signals by Id
     pHTTP('http://predata-challenge.herokuapp.com/signals/' + req.params.id)
       .then((data) => {
@@ -172,6 +175,10 @@ app.get('/signals/norms/:id', (req,res) => {
         data.forEach((obj) =>{
           obj.value = numbers.shift()
         })
+        data.sort((a,b) => {
+          return new Date(a.date).getTime() - new Date(b.date).getTime()
+        });
+        data.reverse()
         res.status(200).send(JSON.stringify(data))
       })
       .catch((err) => {
