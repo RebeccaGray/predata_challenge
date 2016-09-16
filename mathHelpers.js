@@ -37,20 +37,20 @@ const xcorr = (x,y) => {
   //from Fast Fourier Transforms to return a maximum correlation
 };
 
-const standardDeviation = (values) => {
+const standardDeviation = (values, avg) => {
     return numbers.statistic.standardDev(values)
-    // var avg = average(values);
+  //  var avg = mean(values);
     // var squareDiffs = values.map((value) => {
     //   var diff = value - avg;
     //   var sqrDiff = diff * diff;
     //   return sqrDiff;
     // });
-    // var avgSquareDiff = average(squareDiffs);
+    // var avgSquareDiff = mean(squareDiffs);
     // var stdDev = Math.sqrt(avgSquareDiff);
     // return stdDev;
   }
 
-const average = (data) => {
+const mean = (data) => {
   //input array data
     var sum = data.reduce((sum, value) => {
       return sum + value;
@@ -69,5 +69,5 @@ module.exports = {
   xcorr:xcorr,
 //  dotProduct:dotProduct,
   standardDeviation:standardDeviation,
-  average:average
+  mean:mean
 }
