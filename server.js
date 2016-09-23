@@ -24,6 +24,8 @@ const pHTTP = (url) =>
 
 app.get('/signals/cross/:signals_id/:pattern_id', (req, res) => {
   //get signals by Id
+  let method = req.query.method;
+  //totally not sure what to do with the method.. 
   let promises = [];
   promises.push(pHTTP('http://predata-challenge.herokuapp.com/signals/' + req.params.signals_id))
   promises.push(pHTTP('http://predata-challenge.herokuapp.com/patterns/' + req.params.pattern_id))
